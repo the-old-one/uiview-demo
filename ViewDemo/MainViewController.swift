@@ -11,7 +11,6 @@ import UIKit
 class MainViewController: UIViewController {
     let presenter: MainViewPresenter!
     var mainView: MainView { return self.view as! MainView }
-    var liked = false
 
     init(with presenter: MainViewPresenter) {
         self.presenter = presenter
@@ -28,26 +27,15 @@ class MainViewController: UIViewController {
     }
 
     private func likeAction() {
-        self.liked = !self.liked
-        if self.liked {
-            UIView.animate(withDuration: 0.5, animations: {
-                self.mainView.likeButton.setTitle("Dislike", for: .normal)
-                self.mainView.contentView.backgroundColor = UIColor.red.withAlphaComponent(0.5)
-            })
-        } else {
-            UIView.animate(withDuration: 0.5, animations: {
-                self.mainView.likeButton.setTitle("Like", for: .normal)
-                self.mainView.contentView.backgroundColor = .clear
-            })
-        }
+        presenter.updateLike()
+
+        UIView.animate(withDuration: 0.5, animations: {
+            self.mainView.likeButton.setTitle(self.presenter.likeButtonTitle, for: .normal)
+            self.mainView.contentView.backgroundColor = self.presenter.viewColor
+        })
     }
 
     override func loadView() {
         self.view = MainView(frame: UIScreen.main.bounds)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
